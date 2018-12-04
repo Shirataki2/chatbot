@@ -1,0 +1,22 @@
+{
+  "name": "cog-chat",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "debug": "nodemon node.js",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "apiai": "^4.0.3",
+    "body-parser": "^1.18.3",
+    "dialogflow-fulfillment": "^0.6.1",
+    "dotenv": "^6.1.0",
+    "express": "^4.16.4",
+    "jquery": "^3.3.1",
+    "moment": "^2.22.2",
+    "socket.io": "^2.2.0"
+  }
+}
