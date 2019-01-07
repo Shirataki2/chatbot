@@ -19,21 +19,29 @@
 </head>
 
 <body>
-  <div class="container mb-6">
-    <div class="row">
-      <div class="col-12 col-lg-8 offset-lg-2">
-        <section>
-          <ul id="main-session">
+  <div id="wrap">
+    <div id="back">
+      <p class="text-center" id="point">0pt</p>
+    </div>
+      <div class="container mb-6">
+      <div id="contents">
+        <div class="row">
+          <div class="col-12 col-lg-8 offset-lg-2">
+            <section>
+              <ul id="main-session">
 
-          </ul>
-        </section>
+              </ul>
+            </section>
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <footer class="fixed-bottom">
     <form action="">
-      <input id="m" autocomplete="off" />
-      <button>送信！</button>
+      <input class="b" id="m" autocomplete="off" />
+      <span id="time">5:00</span>
+      <button class="b">送信！</button>
     </form>
   </footer>
   <form action="" hidden id="t"></form>

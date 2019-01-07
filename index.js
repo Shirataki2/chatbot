@@ -28,7 +28,8 @@ app.get("/", (_, res) => {
 });
 
 io.on("connection", (socket) => {
-  console.log(socket.id + " connected!");
+  let num = socket.client.conn.server.clientsCount;
+  console.log(socket.id + num +"connected!");
   socket
 
 
@@ -48,8 +49,8 @@ io.on("connection", (socket) => {
       const aiTxt = response.result.fulfillment.speech;
       send(socket, aiTxt);
     });
-    apiaiReq.on("error", () => {
-      console.log("error");
+    apiaiReq.on("error", (err) => {
+      console.error(err);
       send(socket, "Error");
     });
     apiaiReq.end();

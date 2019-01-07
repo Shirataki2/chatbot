@@ -3,17 +3,45 @@ const section = $("#main-session");
 const aiIcon = "static/images/anata.png";
 const humanIcon = "static/images/watashi.png";
 
+let state = [0, 0]
+$(window).on("beforeunload", (e) => {
+  socket.disconnect();
+})
 socket.on("connect", () => {
   socket.headbeatTimeOut = 1000;
   console.log("Connected!");
-  sleep(500).done(() => {
+  sleep(1000).done(() => {
     socket.emit("ask");
   })
   socket.on("ai message", (data) => {
-    aiMessage(data.msg, "static/images/anata.png");
+    const msg = data.msg.split('@');
+    console.log(msg);
+    if (msg.length >= 2) {
+      sleep(100).done(() => {
+        aiMessage(msg[0], "static/images/anata.png");
+      });
+      const status = JSON.parse(`{${msg[1]}}`);
+      if (status.dog !== undefined) {
+        state[0] += status.dog;
+        if (state[0] >= 1) {
+          $('#point').css('color', '#00ff0065');
+        }
+        $('#point').html(`${state[0]}pts`)
+      }
+      if (status.cat !== undefined) {
+        state[1] += status.cat;
+        if (state[1] >= 1) {
+          $('#point').css('color', '#ff000065');
+        }
+        $('#point').html(`${state[1]}pts`)
+      }
+    } else if (msg.length === 1) {
+      aiMessage(msg, "static/images/anata.png");
+    }
     $("html,body").animate({
       scrollTop: $("#main-session")[0].scrollHeight
     }, "slow");
+
   });
   $("form").submit(() => {
     socket.emit("human message", $("#m").val());
@@ -26,7 +54,15 @@ socket.on("connect", () => {
   })
 });
 
-
+$(".b").change(() => {
+  const btn = $(".b").get(1);
+  const txt = $(".b").get(0);
+  if (txt.getAttribute("value") === "") {
+    btn.setAttribute("disabled", true);
+  } else {
+    btn.setAttribute("disabled", false);
+  }
+})
 
 function sleep(msec) {
   const def = new $.Deferred;
