@@ -2,11 +2,28 @@ const socket = io();
 const section = $("#main-session");
 const aiIcon = "static/images/anata.png";
 const humanIcon = "static/images/watashi.png";
-
+let initalState = true;
 let state = [0, 0]
 $(window).on("beforeunload", (e) => {
   socket.disconnect();
 })
+$(document).ready(() => {
+  socket.emit("initialize", `##INITIAL_STATE##`);
+  initalState = false;
+  $("#s").prop("disabled", true);
+  $("#s").css({"background": "#cccccc"});
+  $("#m").on("input propertychange", ()=>{
+    if($("#m").val().length === 0){
+      $("#s").prop("disabled", true);
+      $("#s").css({"background": "#cccccc"});
+    }else{
+      $("#s").prop("disabled", false);
+      $("#s").css({"background": "#0000ff"});  
+    }
+  })
+  
+})
+
 socket.on("connect", () => {
   socket.headbeatTimeOut = 1000;
   console.log("Connected!");
@@ -26,14 +43,14 @@ socket.on("connect", () => {
         if (state[0] >= 1) {
           $('#point').css('color', '#00ff0065');
         }
-        $('#point').html(`${state[0]}pts`)
+        $('#point').html(`${state[0]}`)
       }
       if (status.cat !== undefined) {
         state[1] += status.cat;
         if (state[1] >= 1) {
           $('#point').css('color', '#ff000065');
         }
-        $('#point').html(`${state[1]}pts`)
+        $('#point').html(`${state[1]}`)
       }
     } else if (msg.length === 1) {
       aiMessage(msg, "static/images/anata.png");
@@ -43,8 +60,8 @@ socket.on("connect", () => {
     }, "slow");
 
   });
-  $("form").submit(() => {
-    socket.emit("human message", $("#m").val());
+  $("form").submit(() => {     
+      socket.emit("human message", `${$("#m").val()}`);
     humanMessage($("#m").val(), humanIcon);
     $("#m").val("");
     $("html,body").animate({

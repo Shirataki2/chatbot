@@ -24,8 +24,14 @@ app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/views"));
 
 app.get("/", (_, res) => {
-  res.sendFile(__dirname + "views/index.html");
+  res.sendFile(__dirname + "/views/index.html");
 });
+
+app.get("/main", (_, res) => {
+  res.sendFile(__dirname + "/views/main.html");
+});
+
+
 
 io.on("connection", (socket) => {
   let num = socket.client.conn.server.clientsCount;
@@ -51,7 +57,14 @@ io.on("connection", (socket) => {
     });
     apiaiReq.on("error", (err) => {
       console.error(err);
-      send(socket, "Error");
+      send(socket, "エラーが発生しました．");
+    });
+    apiaiReq.end();
+  });
+
+  socket.on("initialize", (msg) => {
+    let apiaiReq = apiai.textRequest(msg, {
+      sessionId: process.env.APIAI_SESSION_ID
     });
     apiaiReq.end();
   });
